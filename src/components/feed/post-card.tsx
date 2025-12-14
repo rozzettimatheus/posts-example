@@ -62,7 +62,11 @@ export function PostCard({ post }: PostCardProps) {
                     author={author.name}
                     excerpt={content.slice(0, 16).concat("...")}
                   >
-                    <Button variant="secondary">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      className="cursor-pointer"
+                    >
                       <Repeat2 /> Repost
                     </Button>
                   </RepostConfirmDialog>

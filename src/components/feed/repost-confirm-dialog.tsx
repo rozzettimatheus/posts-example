@@ -30,7 +30,7 @@ export function RepostConfirmDialog({
         <AlertDialogHeader>
           <AlertDialogTitle>Repost confirmation</AlertDialogTitle>
           <AlertDialogDescription>
-            Do you want to repost <strong>{excerpt}</strong> from{" "}
+            Do you want to repost <strong>"{excerpt}"</strong> from{" "}
             <strong>{author}</strong>?
           </AlertDialogDescription>
         </AlertDialogHeader>
