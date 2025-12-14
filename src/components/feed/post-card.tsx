@@ -5,17 +5,61 @@ import { formatPostDate } from "@/lib/date";
 import { userUtils } from "@/lib/user";
 import * as Card from "@/components/ui/card";
 import * as Avatar from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
 
 import { RepostConfirmDialog } from ".";
 
+/**
+ * Props for the PostCard component.
+ */
 type PostCardProps = {
+  /**
+   * Post data to be rendered.
+   *
+   * Contains author information, content, timestamps,
+   * and repost-related metadata.
+   */
   post: Post;
+
+  /**
+   * Callback triggered when the user confirms a repost action.
+   *
+   * Typically responsible for:
+   * - Creating a repost entry via an API
+   * - Updating repost counters or feed state
+   *
+   * @returns A promise that resolves when the repost operation completes
+   */
   onRepost: () => Promise<void>;
 };
 
-export function PostCard({ post }: PostCardProps) {
+/**
+ * PostCard component.
+ *
+ * Renders an individual post within the feed.
+ *
+ * Features:
+ * - Author avatar and identity
+ * - Formatted post timestamp
+ * - Post content display
+ * - Repost metadata and actions
+ *
+ * Behavior:
+ * - Displays a repost indicator when the post was reposted by another user
+ * - Shows repost count when available
+ * - Allows reposting only when the post has not been reposted yet
+ *
+ * Responsibilities:
+ * - Purely presentational rendering of a post
+ * - Delegates repost confirmation to `RepostConfirmDialog`
+ *
+ * This component assumes that all business logic
+ * (permissions, repost creation, state updates)
+ * is handled externally.
+ */
+export function PostCard({ post, onRepost }: PostCardProps) {
   const { author, content, createdAt, repostedByUser, numberOfReposts } = post;
+
+  /** User initials derived from the author name (used as avatar fallback) */
   const initials = userUtils.getInitials(author.name);
 
   return (
@@ -26,6 +70,7 @@ export function PostCard({ post }: PostCardProps) {
           {repostedByUser.name} reposted
         </span>
       )}
+
       <div className="flex">
         <Avatar.Avatar className="h-11 w-11">
           <Avatar.AvatarImage
@@ -35,18 +80,22 @@ export function PostCard({ post }: PostCardProps) {
             {initials}
           </Avatar.AvatarFallback>
         </Avatar.Avatar>
+
         <Card.CardContent className="px-3 w-full">
-          <span className="flex space-x-1.5 leading-tight text-foreground mb-1 ">
+          <span className="flex space-x-1.5 leading-tight text-foreground mb-1">
             <strong className="font-bold">{author.name}</strong>
             <span className="text-sm text-muted-foreground">
               @{author.username}
             </span>
           </span>
+
           <time className="block text-xs text-muted-foreground">
             {formatPostDate(createdAt)}
           </time>
+
           <div className="space-y-3">
             <p className="text-sm mt-4 leading-relaxed">{content}</p>
+
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-2">
                 <span className="grid rounded-full place-items-center bg-green-500 h-6 w-6 aspect-square">
@@ -56,20 +105,14 @@ export function PostCard({ post }: PostCardProps) {
                   {numberOfReposts || 0}
                 </span>
               </div>
+
               {(!numberOfReposts || numberOfReposts === 0) && (
                 <div className="flex items-center justify-end">
                   <RepostConfirmDialog
+                    onRepost={onRepost}
                     author={author.name}
                     excerpt={content.slice(0, 16).concat("...")}
-                  >
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      className="cursor-pointer"
-                    >
-                      <Repeat2 /> Repost
-                    </Button>
-                  </RepostConfirmDialog>
+                  />
                 </div>
               )}
             </div>

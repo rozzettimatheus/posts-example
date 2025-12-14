@@ -5,15 +5,68 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
+/**
+ * Props for the ComposerInput component.
+ */
 type ComposerInputProps = {
+  /**
+   * Disables the composer input and submit button.
+   *
+   * Commonly used while a post is being sent or processed
+   * (e.g. during an API request).
+   *
+   * When `true`:
+   * - The textarea becomes read-only
+   * - The send button is disabled
+   * - A loading spinner is displayed instead of the send icon
+   */
   disabled?: boolean;
+
+  /**
+   * Callback triggered when the user sends the content.
+   *
+   * This function is only called when:
+   * - The content is not empty
+   * - The content length does not exceed the maximum allowed characters
+   *
+   * @param content - The text content written by the user
+   */
   onSend: (content: string) => void;
 };
 
+/**
+ * ComposerInput component.
+ *
+ * A post composer input used to create new content (e.g. posts, messages).
+ *
+ * Features:
+ * - Multiline textarea input
+ * - Client-side character limit validation (max: 777 characters)
+ * - Visual feedback for invalid input
+ * - Disabled/loading state support
+ *
+ * Behavior:
+ * - Prevents sending empty content
+ * - Prevents sending content that exceeds the character limit
+ * - Delegates submission handling to the `onSend` callback
+ *
+ * Typical use cases:
+ * - Creating posts in a social feed
+ * - Sending messages or short-form content
+ */
 export function ComposerInput({ onSend, disabled }: ComposerInputProps) {
   const [content, setContent] = useState<string>("");
+
+  /** Indicates whether the current content length is within the allowed limit */
   const isValid = content?.length <= 777;
 
+  /**
+   * Handles the send action.
+   *
+   * Safeguards against:
+   * - Empty content
+   * - Invalid content length
+   */
   function handleSendPost() {
     if (!content) return;
     onSend(content);
@@ -48,6 +101,7 @@ export function ComposerInput({ onSend, disabled }: ComposerInputProps) {
           )}
         </Button>
       </div>
+
       <div className="flex items-center mt-1.5">
         {!isValid && (
           <span className="leading-tight text-xs font-medium block text-red-600">
