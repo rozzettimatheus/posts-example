@@ -16,7 +16,7 @@ export function PostComposer({ onCreate, isCreatingPost }: PostComposerProps) {
     <Card className="flex-row dark:border-transparent shadow-none">
       <Avatar.Avatar className="h-11 w-11">
         <Avatar.AvatarImage
-          src={`https://api.dicebear.com/7.x/thumbs/svg?seed=gab`}
+          src={`https://api.dicebear.com/7.x/thumbs/svg?seed=randomguy`}
         />
         <Avatar.AvatarFallback className="bg-red-400">GM</Avatar.AvatarFallback>
       </Avatar.Avatar>
