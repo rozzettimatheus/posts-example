@@ -1,5 +1,4 @@
 import { useState } from "react";
-
 import { SendHorizonal, Loader2 } from "lucide-react";
 
 import { Textarea } from "@/components/ui/textarea";
